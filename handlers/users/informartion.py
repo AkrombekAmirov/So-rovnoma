@@ -1,22 +1,34 @@
+from file_service.file_write import file_read, check_passport1, update_person_info
 from aiogram.dispatcher.filters.builtin import CommandStart
-from keyboards.inline import *
-from file_service.file_write import file_read
 from aiogram.dispatcher import FSMContext
+from keyboards.inline import *
 from aiogram import types
 from loader import dp
 from states import *
 
-number = 0
 list_ = ["BOBOYEVA MOHIM SHUKUROVNA", "O‘KTAMOVA YAQUTOY RAVSHAN QIZI", "SULTANOV G‘AYRAT SHARIFOVICH",
          "XUDOYBERDIYEVA VILOYAT JABBOROVNA", "YODGOROV MUHAMMAD FURQAT O‘G‘LI", "YUNUSXODJAYEV ZAIR SHAKIROVICH",
          "	KADIROVA NILUFAR KAZIM QIZI"]
 
 
+async def get_next_teacher(state: FSMContext):
+    async with state.proxy() as data:
+        numbers = data.get("numbers", 0)
+        numbers += 1
+        data["numbers"] = numbers
+        return numbers
+
+
+number = 0
+
+
 @dp.message_handler(CommandStart())
-async def get_one(message: types.Message):
+async def get_one(message: types.Message, state=FSMContext):
+    await state.update_data({"number": 0})
+
     await message.answer(
-        "Mehnat va ijtimoiy muunosabatlar akademiyasi {list_[number]} ning pedagogik faoliyatiga baxo bering.\nO‘qituvchi talabalar bilan qanchalik yaxshi muloqot qiladi?",
-        reply_markup=question_one)
+        f"Mehnat va ijtimoiy muunosabatlar akademiyasi <b><u>{list_[0]}</u></b> ning pedagogik faoliyatiga baxo bering.\nO‘qituvchi talabalar bilan qanchalik yaxshi muloqot qiladi?",
+        reply_markup=question_one, parse_mode="HTML")
     await Question.one.set()
 
 
@@ -24,6 +36,7 @@ async def get_one(message: types.Message):
 async def get_two(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"one": call.data})
     await call.message.delete()
+    print(await check_passport1(name=list_[0]))
     await call.message.answer("O‘qituvchi o‘zining fani bo‘yicha qanchalik ma’lumotga ega?", reply_markup=question_two)
     await Question.next()
 
@@ -127,10 +140,34 @@ async def get_twelve(call: types.CallbackQuery, state: FSMContext):
 async def get_thirteen(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"twelve": call.data})
     await call.message.delete()
-    global number
-    await call.message.answer(f"Siz {list_[number]} ga bergan baxoingiz muvaffaqiyatli qabul qilindi.")
-    number += 1
-    await call.message.answer(f"{list_[number]}\n")
-    await call.message.answer("Professor-o‘qituvchining talabalar bilan qanchalik yaxshi muloqot qiladi?",
-                              reply_markup=question_one)
+    data = await state.get_data()
+    number = data.get("number")
+    data2 = await check_passport1(name=list_[number])
+    print(data2, "\n", data)
+    data1 = [[list_[number], f"{int(data.get('one')) + int(data2[1])}", f"{int(data.get('two')) + int(data2[2])}",
+              f"{int(data.get('three')) + int(data2[3])}", f"{int(data.get('four')) + int(data2[4])}",
+              f"{int(data.get('five')) + int(data2[5])}", f"{int(data.get('six')) + int(data2[6])}",
+              f"{int(data.get('seven')) + int(data2[7])}", f"{int(data.get('eight')) + int(data2[8])}",
+              f"{int(data.get('nine')) + int(data2[9])}", f"{int(data.get('ten')) + int(data2[10])}",
+              f"{int(data.get('eleven')) + int(data2[11])}"]]
+    await update_person_info((list_[number]), data1)
+    if len(list_) == data.get("number") + 1:
+        await call.message.answer("Siz barcha baxolaringiz muvaffaqiyatli qabul qilindi.\nBaxo berish tugadi!\n/start")
+    elif len(list_) != number:
+        await call.message.answer(
+            f"Siz {list_[number]} ga bergan baxoingiz muvaffaqiyatli qabul qilindi.\n Baxo berishda davom etasizmi?",
+            reply_markup=choose_)
+        await state.update_data({"number": await get_next_teacher(state)})
+    await Question.next()
+
+
+@dp.callback_query_handler(state=Question.thirteen)
+async def get_thirteen(call: types.CallbackQuery, state: FSMContext):
+    await state.update_data({"thirteen": call.data})
+    data = await state.get_data()
+    await call.message.delete()
+    await call.message.answer(f"<b><u>{list_[data.get('number')]}</u></b>\n")
+    await call.message.answer(
+        "Professor-o‘qituvchining talabalar bilan qanchalik yaxshi muloqot qiladi?",
+        reply_markup=question_one, parse_mode="HTML")
     await Question.one.set()

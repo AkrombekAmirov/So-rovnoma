@@ -1,5 +1,11 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+choose_ = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="Xa", callback_data="1"),
+    ],
+])
+
 choose_a_teacher = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text="BOBOYEVA MOHIM SHUKUROVNA", callback_data="1"),
