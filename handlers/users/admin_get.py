@@ -25,5 +25,5 @@ async def admin(call: types.CallbackQuery):
 async def get_teacher_info(name: str, call: types.CallbackQuery):
     func_data = await check_passport1(name)
     await call.message.answer(
-        f"{name} ning natijalari\nTo'planishi kerak bo'lgan baxo:{func_data[13]}\n To'plangan baxo:{func_data[14]}\nFoiz kursatgichi:{int(func_data[14]) / int(func_data[13]) * 100}",
+        f"{name} ning natijalari\nBaxo berganlar soni: {int(int(func_data[13])/60)}\nTo'planishi kerak bo'lgan baxo: {func_data[13]}\nTo'plangan baxo: {func_data[14]}\nFoiz kursatgichi: {int(int(func_data[14]) / int(func_data[13]) * 100)} %",
         reply_markup=choose_a_teacher)
