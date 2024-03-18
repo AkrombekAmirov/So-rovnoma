@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 choose_ = InlineKeyboardMarkup(inline_keyboard=[
     [
-        InlineKeyboardButton(text="Xa", callback_data="1"),
+        InlineKeyboardButton(text="Xa", callback_data="123"),
     ],
 ])
 

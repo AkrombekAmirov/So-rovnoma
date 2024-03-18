@@ -22,7 +22,7 @@ async def get_next_teacher(state: FSMContext):
 number = 0
 
 
-@dp.callback_query_handler(text='1')
+@dp.callback_query_handler(text='123')
 async def get_one(call: types.CallbackQuery, state=FSMContext):
     await state.update_data({"number": 0})
     await call.message.delete()
@@ -148,14 +148,16 @@ async def get_thirteen(call: types.CallbackQuery, state: FSMContext):
     sonlar = [int(value) for key, value in data.items() if key != 'twelve' or key != 'number']
     print(sum(sonlar))
     list1 = [int(value) for key, value in data.items()]
-    print(list1, list1[1:11], sum(list1[1:11]))
-    data1 = [[list_[data.get("number")], f"{int(data.get('one')) + int(data2[1])}", f"{int(data.get('two')) + int(data2[2])}",
+    print(list1, list1[1:12], sum(list1[1:12]))
+    data1 = [[list_[data.get("number")], f"{int(data.get('one')) + int(data2[1])}",
+              f"{int(data.get('two')) + int(data2[2])}",
               f"{int(data.get('three')) + int(data2[3])}", f"{int(data.get('four')) + int(data2[4])}",
               f"{int(data.get('five')) + int(data2[5])}", f"{int(data.get('six')) + int(data2[6])}",
               f"{int(data.get('seven')) + int(data2[7])}", f"{int(data.get('eight')) + int(data2[8])}",
               f"{int(data.get('nine')) + int(data2[9])}", f"{int(data.get('ten')) + int(data2[10])}",
-              f"{int(data.get('eleven')) + int(data2[11])}", f"{int(data2[12]) + 60}",
-              f"{int(data2[13]) + int(sum(list1[1:11]))}"]]
+              f"{int(data.get('eleven')) + int(data2[11])}", f"{int(data.get('twelve')) + int(data2[12])}",
+              f"{int(data2[13]) + 60}",
+              f"{int(data2[14]) + int(sum(list1[1:13]))}"]]
     await update_person_info((list_[data.get("number")]), data1)
     if len(list_) == data.get("number") + 1:
         await call.message.answer("Siz barcha baxolaringiz muvaffaqiyatli qabul qilindi.\nBaxo berish tugadi!\n/start")

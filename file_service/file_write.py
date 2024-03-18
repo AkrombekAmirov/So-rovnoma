@@ -29,7 +29,7 @@ async def check_passport1(name):
             break
         if f"{row[0]}" == name:
             return [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10],
-                    row[11], row[12], row[13]]
+                    row[11], row[12], row[13], row[14]]
 
 
 async def update_person_info(name, new_data):
