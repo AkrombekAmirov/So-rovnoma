@@ -30,6 +30,27 @@ choose_a_teacher = InlineKeyboardMarkup(inline_keyboard=[
     ],
 ])
 
+configuration = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="Guruh yaratish", callback_data="1"),
+    ],
+    [
+        InlineKeyboardButton(text="Guruhlarni ko'rish", callback_data="2"),
+    ],
+])
+
+teacher = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="O'qituvchini ko'rish", callback_data="teacher_one"),
+    ],
+    [
+        InlineKeyboardButton(text="O'qituvchi qo'shish", callback_data="teacher_two"),
+    ],
+    [
+        InlineKeyboardButton(text="O'qituvchini o'chirish", callback_data="teacher_three"),
+    ],
+])
+
 question_one = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text="a'lo", callback_data="5"),

@@ -6,35 +6,16 @@ from data.config import DATABASE_URL
 Base = declarative_base()
 
 
-class User(SQLModel, table=True):
+class Group(SQLModel, table=True):
     id: int = Field(primary_key=True, index=True)
-    role: str
+    group: str
+
+
+class Teacher(SQLModel, table=True):
+    id: int = Field(primary_key=True, index=True)
+    group_id: int
     name: str
-    phone_number: str
-    created_date: datetime = Field(default=datetime.now().strftime("%Y-%m-%d"), index=True)
-
-
-class Student(SQLModel, table=True):
-    id: int = Field(primary_key=True, index=True)
-    name: str
-    phone_number: str
-    username: str
-    created_date: datetime = Field(default=datetime.now().strftime("%Y-%m-%d"), index=True)
-    created_time: datetime = Field(default=datetime.now().strftime("%H:%M:%S"), index=True)
-
-
-class Question(SQLModel, table=True):
-    id: int = Field(primary_key=True, index=True)
-    question: str
-    created_date: datetime = Field(default=datetime.now().strftime("%Y-%m-%d"), index=True)
-
-
-class Option(SQLModel, table=True):
-    id: int = Field(primary_key=True, index=True)
-    question_id: int
-    answer: str
-    option: str
-    created_date: datetime = Field(default=datetime.now().strftime("%Y-%m-%d"), index=True)
+    teacher_id: str
 
 
 def create_db_and_tables():

@@ -1,35 +1,41 @@
-from file_service.file_write import file_read, check_passport1, update_person_info
+from file_service.file_write import file_read, check_passport1, update_person_info, read_student
 from aiogram.dispatcher.filters.builtin import CommandStart
+from data.data_list import list_, get_question_text
 from aiogram.dispatcher import FSMContext
 from keyboards.inline import *
 from aiogram import types
 from loader import dp
 from states import *
 
-list_ = ["BOBOYEVA MOHIM SHUKUROVNA", "O‘KTAMOVA YAQUTOY RAVSHAN QIZI", "SULTANOV G‘AYRAT SHARIFOVICH",
-         "XUDOYBERDIYEVA VILOYAT JABBOROVNA", "YODGOROV MUHAMMAD FURQAT O‘G‘LI", "YUNUSXODJAYEV ZAIR SHAKIROVICH",
-         "	KADIROVA NILUFAR KAZIM QIZI"]
+
+@dp.message_handler(commands=['exit'])
+async def exit_system(message: types.Message, state: FSMContext):
+    await state.finish()  # Holatni tozalash
+    await message.answer("Tizimdan muvaffaqiyatli chiqib kettiz. Iltimos, qaytadan kiriting:")
+    await Question.hemis_id.set()
 
 
-async def get_next_teacher(state: FSMContext):
-    async with state.proxy() as data:
-        numbers = data.get("number", 0)
-        numbers += 1
-        data["number"] = numbers
-        return numbers
+@dp.message_handler(commands=["start"])
+async def get_func(message: types.Message, state: FSMContext):
+    await message.answer(
+        f"Mehnat va ijtimoiy muunosabatlar akademiyasining professor o'qituvchilarning pedagogik faoliyatiga baxo berishni boshlash uchun HEMIS id ni kiriting!")
+    await message.delete()
+    await Question.hemis_id.set()
 
 
-number = 0
-
-
-@dp.callback_query_handler(text='123')
-async def get_one(call: types.CallbackQuery, state=FSMContext):
+@dp.message_handler(state=Question.hemis_id)
+async def get_one(message: types.Message, state=FSMContext):
+    print(await read_student(message.text))
+    if await read_student(message.text):
+        await state.update_data({"hemis_id": message.text})
+        await message.answer(
+            f"Mehnat va ijtimoiy muunosabatlar akademiyasi <b><u>{list_[0]}</u></b> ning pedagogik faoliyatiga baxo bering.\n{await get_question_text(0)}",
+            reply_markup=question_one, parse_mode="HTML")
+        await Question.next()
+    else:
+        await message.answer("Hemis id noto'g'ri kiritildi. Iltimos qaytadan kiriting!")
+        await Question.hemis_id.set()
     await state.update_data({"number": 0})
-    await call.message.delete()
-    await call.message.answer(
-        f"Mehnat va ijtimoiy muunosabatlar akademiyasi <b><u>{list_[0]}</u></b> ning pedagogik faoliyatiga baxo bering.\nO‘qituvchi talabalar bilan qanchalik yaxshi muloqot qiladi?",
-        reply_markup=question_one, parse_mode="HTML")
-    await Question.one.set()
 
 
 @dp.callback_query_handler(state=Question.one)
@@ -37,7 +43,7 @@ async def get_two(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"one": call.data})
     await call.message.delete()
     print(await check_passport1(name=list_[0]))
-    await call.message.answer("O‘qituvchi o‘zining fani bo‘yicha qanchalik ma’lumotga ega?", reply_markup=question_two)
+    await call.message.answer(text=await get_question_text(1), reply_markup=question_two)
     await Question.next()
 
 
@@ -45,7 +51,7 @@ async def get_two(call: types.CallbackQuery, state: FSMContext):
 async def get_three(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"two": call.data})
     await call.message.delete()
-    await call.message.answer("O‘qituvchining pedagogik maxoratini qanday deb bilasiz?", reply_markup=question_three)
+    await call.message.answer(text=await get_question_text(2), reply_markup=question_three)
     await Question.next()
 
 
@@ -53,9 +59,7 @@ async def get_three(call: types.CallbackQuery, state: FSMContext):
 async def get_four(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"three": call.data})
     await call.message.delete()
-    await call.message.answer(
-        "O‘qituvchining dars jarayoniga jiddiy qarashini, darslarning o‘z vaqtida tashkillashtirilishi haqida qanday fikrdasiz?",
-        reply_markup=question_four)
+    await call.message.answer(text=await get_question_text(3), reply_markup=question_four)
     await Question.next()
 
 
@@ -63,8 +67,7 @@ async def get_four(call: types.CallbackQuery, state: FSMContext):
 async def get_five(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"four": call.data})
     await call.message.delete()
-    await call.message.answer("O‘qituvchi dars jarayonida darsga taaluqli bo‘lmagan mavzuda suhbatlashadimi?",
-                              reply_markup=question_five)
+    await call.message.answer(text=await get_question_text(4), reply_markup=question_five)
     await Question.next()
 
 
@@ -72,9 +75,7 @@ async def get_five(call: types.CallbackQuery, state: FSMContext):
 async def get_six(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"five": call.data})
     await call.message.delete()
-    await call.message.answer(
-        "O‘qituvchi qanchalik pedagogik qoidalarni va shaxsiy chegaralarni buzadi, talabalarning shaxsiyatiga tegadi?",
-        reply_markup=question_six)
+    await call.message.answer(text=await get_question_text(5), reply_markup=question_six)
     await Question.next()
 
 
@@ -82,9 +83,7 @@ async def get_six(call: types.CallbackQuery, state: FSMContext):
 async def get_seven(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"six": call.data})
     await call.message.delete()
-    await call.message.answer(
-        "O‘qituvchining talabalar bilan darsdan tashqari muloqotiga (to‘garak, tadbir, o‘zlashtirishi past o‘quvchilar, ustoz-shogird, sport) munosabatingiz?",
-        reply_markup=question_one)
+    await call.message.answer(text=await get_question_text(6), reply_markup=question_one)
     await Question.next()
 
 
@@ -92,8 +91,7 @@ async def get_seven(call: types.CallbackQuery, state: FSMContext):
 async def get_eight(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"seven": call.data})
     await call.message.delete()
-    await call.message.answer("O‘qituvchining talabalarni darsga qiziqtirish mahorati haqida fikringiz?",
-                              reply_markup=question_eight)
+    await call.message.answer(text=await get_question_text(7), reply_markup=question_eight)
     await Question.next()
 
 
@@ -101,8 +99,7 @@ async def get_eight(call: types.CallbackQuery, state: FSMContext):
 async def get_nine(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"eight": call.data})
     await call.message.delete()
-    await call.message.answer("O‘qituvchining talabalarni baholashi haqida fikringiz?",
-                              reply_markup=question_nine)
+    await call.message.answer(await get_question_text(8), reply_markup=question_nine)
     await Question.next()
 
 
@@ -110,9 +107,7 @@ async def get_nine(call: types.CallbackQuery, state: FSMContext):
 async def get_ten(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"nine": call.data})
     await call.message.delete()
-    await call.message.answer(
-        "O‘qituvchi dars jarayonida interfaol metodlardan (klaster, aqliy xujum, guruhlarda ishlash va hk) qanchalik foydalanadi?",
-        reply_markup=question_ten)
+    await call.message.answer(await get_question_text(9), reply_markup=question_ten)
     await Question.next()
 
 
@@ -120,9 +115,7 @@ async def get_ten(call: types.CallbackQuery, state: FSMContext):
 async def get_eleven(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"ten": call.data})
     await call.message.delete()
-    await call.message.answer(
-        "O‘qituvchi dars jarayonida zamonaviy texnologiyalardan (masalan, smart doska, kompyuter, onlayn resurslar) qanchalik samarali foydalanadi?",
-        reply_markup=question_ten)
+    await call.message.answer(await get_question_text(10), reply_markup=question_ten)
     await Question.next()
 
 
@@ -130,9 +123,7 @@ async def get_eleven(call: types.CallbackQuery, state: FSMContext):
 async def get_twelve(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"eleven": call.data})
     await call.message.delete()
-    await call.message.answer(
-        "Umuman olganda, o‘qituvchi haqida qanday fikrdasiz?",
-        reply_markup=question_one)
+    await call.message.answer(await get_question_text(11), reply_markup=question_one)
     await Question.next()
 
 
@@ -165,7 +156,7 @@ async def get_thirteen(call: types.CallbackQuery, state: FSMContext):
         await call.message.answer(
             f"Siz {list_[number]} ga bergan baxoingiz muvaffaqiyatli qabul qilindi.\n Baxo berishda davom etasizmi?",
             reply_markup=choose_)
-        await state.update_data({"number": await get_next_teacher(state)})
+        await state.update_data({"number": int(data.get("number")) + 1})
     await Question.next()
 
 
@@ -174,7 +165,5 @@ async def get_thirteen(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     await call.message.delete()
     await call.message.answer(f"<b><u>{list_[data.get('number')]}</u></b>\n")
-    await call.message.answer(
-        "Professor-o‘qituvchining talabalar bilan qanchalik yaxshi muloqot qiladi?",
-        reply_markup=question_one, parse_mode="HTML")
+    await call.message.answer(await get_question_text(0), reply_markup=question_one, parse_mode="HTML")
     await Question.one.set()

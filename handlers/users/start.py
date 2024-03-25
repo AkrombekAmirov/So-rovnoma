@@ -6,12 +6,14 @@ from aiogram import types
 from loader import dp
 
 
-@dp.message_handler(CommandStart())
+@dp.message_handler(commands=["admin"])
 async def bot_start(message: types.Message):
     print(message.from_user.id, "=========", ADMINS)
+    # await message.answer(text="Anonim berilgan baxo natijalarini bilish uchun o'qituvchini tanlang!",
+    #                      reply_markup=choose_a_teacher)
     if str(message.from_user.id) == str(ADMINS):
         await message.answer(text="Anonim berilgan baxo natijalarini bilish uchun o'qituvchini tanlang!", reply_markup=choose_a_teacher)
-    elif str(message.from_user.id) != str(ADMINS):
-        await message.answer(
-            f"Mehnat va ijtimoiy muunosabatlar akademiyasining professor o'qituvchilarning pedagogik faoliyatiga baxo berishni boshlash uchun quyidagi tugmani bosing.",
-            reply_markup=choose_)
+    # elif str(message.from_user.id) != str(ADMINS):
+    #     await message.answer(
+    #         f"Mehnat va ijtimoiy muunosabatlar akademiyasining professor o'qituvchilarning pedagogik faoliyatiga baxo berishni boshlash uchun quyidagi tugmani bosing.",
+    #         reply_markup=choose_)
