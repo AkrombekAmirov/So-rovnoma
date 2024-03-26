@@ -1,10 +1,19 @@
-from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
+from keyboards.inline import choose_, choose_a_teacher
 from data.config import ADMINS
+from aiogram import types
 
 from loader import dp
 
 
-@dp.message_handler()
+@dp.message_handler(commands=["admin"])
 async def bot_start(message: types.Message):
-    await message.answer(f"Salom, {message.from_user.full_name}")
+    print(message.from_user.id, "=========", ADMINS)
+    # await message.answer(text="Anonim berilgan baxo natijalarini bilish uchun o'qituvchini tanlang!",
+    #                      reply_markup=choose_a_teacher)
+    if str(message.from_user.id) == str(ADMINS):
+        await message.answer(text="Anonim berilgan baxo natijalarini bilish uchun o'qituvchini tanlang!", reply_markup=choose_a_teacher)
+    # elif str(message.from_user.id) != str(ADMINS):
+    #     await message.answer(
+    #         f"Mehnat va ijtimoiy muunosabatlar akademiyasining professor o'qituvchilarning pedagogik faoliyatiga baxo berishni boshlash uchun quyidagi tugmani bosing.",
+    #         reply_markup=choose_)
