@@ -1,4 +1,4 @@
-from utils.db_api.models import Group, Teacher
+from utils.db_api.models import Group, Teacher, Student
 from sqlalchemy.orm import sessionmaker
 from data.config import engine
 
@@ -79,10 +79,10 @@ def read_all_teachers():
         session.close()
 
 
-def delete_teacher(id):
+def delete_teacher(id, group_id):
     session = sessionmaker(bind=engine)()
     try:
-        teacher = session.query(Teacher).filter(Teacher.id == id).first()
+        teacher = session.query(Teacher).filter(Teacher.teacher_id == id and Teacher.group_id == group_id).first()
         if teacher:
             session.delete(teacher)
             session.commit()
@@ -94,49 +94,24 @@ def delete_teacher(id):
     finally:
         session.close()
 
-# from sqlalchemy.orm import sessionmaker
-# from utils.db_api.models import Group
-# from data.config import engine
-#
-# Session = sessionmaker(bind=engine)
-#
-# def operate_on_group(func):
-#     def wrapper(*args, **kwargs):
-#         session = Session()
-#         try:
-#             result = func(session, *args, **kwargs)
-#             session.commit()
-#             return result
-#         except Exception as e:
-#             session.rollback()
-#             raise e
-#         finally:
-#             session.close()
-#     return wrapper
-#
-# @operate_on_group
-# def create_group(session, **kwargs):
-#     group = Group(**kwargs)
-#     session.add(group)
-#     session.flush()  # Use flush to get the ID immediately
-#     return group.id
-#
-# @operate_on_group
-# def read_group(session, id):
-#     return session.query(Group).filter(Group.id == id).first()
-#
-# @operate_on_group
-# def read_groups(session, id):
-#     return session.query(Group).filter(Group.id == id).all()
-#
-# @operate_on_group
-# def read_all_groups(session):
-#     return session.query(Group).all()
-#
-# @operate_on_group
-# def delete_group(session, id):
-#     group = session.query(Group).filter(Group.id == id).first()
-#     if group:
-#         session.delete(group)
-#         return True
-#     return False
+
+def create_student(**kwargs):
+    session = sessionmaker(bind=engine)()
+    try:
+        student = Student(**kwargs)
+        session.add(student)
+        session.commit()
+        return student.id
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+
+def get_student(hemis_id):
+    session = sessionmaker(bind=engine)()
+    try:
+        return session.query(Student).filter(Student.hemis_id == hemis_id).first()
+    finally:
+        session.close()

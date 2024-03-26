@@ -13,9 +13,18 @@ class Group(SQLModel, table=True):
 
 class Teacher(SQLModel, table=True):
     id: int = Field(primary_key=True, index=True)
-    group_id: int
+    group_id: str
     name: str
     teacher_id: str
+
+
+class Student(SQLModel, table=True):
+    id: int = Field(primary_key=True, index=True)
+    group_id: str
+    name: str
+    hemis_id: str
+    telegram_id: str
+    username: str
 
 
 def create_db_and_tables():
