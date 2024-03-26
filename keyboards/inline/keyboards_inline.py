@@ -2,7 +2,16 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 choose_ = InlineKeyboardMarkup(inline_keyboard=[
     [
-        InlineKeyboardButton(text="Xa", callback_data="1"),
+        InlineKeyboardButton(text="Xa", callback_data="123"),
+    ],
+])
+
+choose_two = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="Xa", callback_data="choese_yes"),
+    ],
+    [
+        InlineKeyboardButton(text="Yoq", callback_data="choese_no"),
     ],
 ])
 
@@ -27,6 +36,46 @@ choose_a_teacher = InlineKeyboardMarkup(inline_keyboard=[
     ],
     [
         InlineKeyboardButton(text="	KADIROVA NILUFAR KAZIM QIZI", callback_data="7"),
+    ],
+])
+choose_a_teacher_ = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="BOBOYEVA MOHIM SHUKUROVNA", callback_data="choose_0"),
+    ],
+    [
+        InlineKeyboardButton(text="O‘KTAMOVA YAQUTOY RAVSHAN QIZI", callback_data="choose_1"),
+    ],
+    [
+        InlineKeyboardButton(text="SULTANOV G‘AYRAT SHARIFOVICH", callback_data="choose_2"),
+    ],
+    [
+        InlineKeyboardButton(text="XUDOYBERDIYEVA VILOYAT JABBOROVNA", callback_data="choose_3"),
+    ],
+    [
+        InlineKeyboardButton(text="YODGOROV MUHAMMAD FURQAT O‘G‘LI", callback_data="choose_4"),
+    ],
+    [
+        InlineKeyboardButton(text="YUNUSXODJAYEV ZAIR SHAKIROVICH", callback_data="choose_5"),
+    ],
+    [
+        InlineKeyboardButton(text="	KADIROVA NILUFAR KAZIM QIZI", callback_data="choose_6"),
+    ],
+])
+configuration = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="Guruh yaratish", callback_data="1"),
+    ],
+    [
+        InlineKeyboardButton(text="Guruhlarni ko'rish", callback_data="2"),
+    ],
+])
+
+teacher = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="O'qituvchi qo'shish", callback_data="teacher_one"),
+    ],
+    [
+        InlineKeyboardButton(text="O'qituvchini o'chirish", callback_data="teacher_two"),
     ],
 ])
 
