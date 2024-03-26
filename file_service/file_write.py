@@ -3,7 +3,7 @@ import openpyxl
 
 
 async def load_excel_file(file_name):
-    workbook = openpyxl.load_workbook(join(dirname(__file__), "person.xlsx"))
+    workbook = openpyxl.load_workbook(join(dirname(__file__), str(file_name)))
     sheet = workbook.active
     workbook.close()
     return sheet
@@ -29,7 +29,25 @@ async def check_passport1(name):
             break
         if f"{row[0]}" == name:
             return [row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10],
-                    row[11]]
+                    row[11], row[12], row[13], row[14]]
+
+
+async def read_student(student_id):
+    sheet = await load_excel_file("Talabalar_bazasi_18_03_24.xlsx")
+    for row in sheet.iter_rows(min_row=2, max_row=1000, values_only=True):
+        if row[0] is None:
+            break
+        if f"{row[0]}" == student_id:
+            return row
+
+
+async def read_group_(group):
+    sheet = await load_excel_file("Talabalar_bazasi_18_03_24.xlsx")
+    for row in sheet.iter_rows(min_row=2, max_row=1000, values_only=True):
+        if row[0] is None:
+            break
+        if f"{row[2]}" == group:
+            return row
 
 
 async def update_person_info(name, new_data):

@@ -12,4 +12,8 @@ __all__ = [
     "question_ten",
     "choose_a_teacher",
     "choose_",
+    "configuration",
+    "teacher",
+    "choose_two",
+    "choose_a_teacher_",
 ]
