@@ -32,13 +32,14 @@ async def get_one(message: types.Message, state=FSMContext):
         await Question.hemis_id.set()
     elif await read_student(message.text):
         data = await read_student(message.text)
+        # print(int([teacher_.teacher_id for teacher_ in read_teachers(data[2])][1]), 'llllllllll', len([teacher_.teacher_id for teacher_ in read_teachers(data[2])]))
         await state.update_data({"hemis_id": message.text})
         await state.update_data({"number": int([teacher_.teacher_id for teacher_ in read_teachers(data[2])][0])})
         create_student(hemis_id=message.text, group_id=data[2], name=data[1], telegram_id=message.from_user.id,
                        username=message.from_user.username)
         s = await state.get_data()
-        print(s, "pppppppppppppppppppp", int([teacher_.teacher_id for teacher_ in read_teachers(data[2])][1]))
-        print(int([teacher_.teacher_id for teacher_ in read_teachers(data[2])][0]), "pppppppppppppppppppp", data[2])
+        # print(s, "pppppppppppppppppppp", int([teacher_.teacher_id for teacher_ in read_teachers(data[2])][1]))
+        # print(int([teacher_.teacher_id for teacher_ in read_teachers(data[2])][0]), "pppppppppppppppppppp", data[2])
         await message.answer(
             f"Mehnat va ijtimoiy muunosabatlar akademiyasi <b><u>{list_[int([teacher_.teacher_id for teacher_ in read_teachers(data[2])][0])]}</u></b> ning pedagogik faoliyatiga baxo bering.\n{await get_question_text(0)}",
             reply_markup=question_one, parse_mode="HTML")
@@ -52,7 +53,6 @@ async def get_one(message: types.Message, state=FSMContext):
 async def get_two(call: types.CallbackQuery, state: FSMContext):
     await state.update_data({"one": call.data})
     await call.message.delete()
-    print(await check_passport1(name=list_[0]))
     await call.message.answer(text=await get_question_text(1), reply_markup=question_two)
     await Question.next()
 
@@ -144,12 +144,10 @@ async def get_thirteen(call: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     data1_ = await read_student(data.get('hemis_id'))
     data2 = await check_passport1(name=list_[data.get("number")])
-    print(data2, "\n", data, "\n", data2[1:11])
-    print(sum([int(item) for item in data2[1:11]]))
-    sonlar = [int(value) for key, value in data.items() if key != 'twelve' or key != 'number']
-    print(sum(sonlar))
+    # print(data2, "\n", data, "\n", data2[1:11])
+    # print(sum([int(item) for item in data2[1:11]]))
     list1 = [int(value) for key, value in data.items()]
-    print(list1, list1[2:14], sum(list1[2:14]))
+    # print(list1, list1[2:14], sum(list1[2:14]))
     data1 = [[list_[int(data.get("number"))], f"{int(data.get('one')) + int(data2[1])}",
               f"{int(data.get('two')) + int(data2[2])}",
               f"{int(data.get('three')) + int(data2[3])}", f"{int(data.get('four')) + int(data2[4])}",
@@ -160,8 +158,8 @@ async def get_thirteen(call: types.CallbackQuery, state: FSMContext):
               f"{int(data2[13]) + 60}",
               f"{int(data2[14]) + int(sum(list1[2:14]))}"]]
     await update_person_info((list_[data.get("number")]), data1)
-    print(int([teacher_.teacher_id for teacher_ in read_teachers(data1_[2])][1]), 'llllllllll')
-    if int([teacher_.teacher_id for teacher_ in read_teachers(data1_[2])][1]) == int(data.get("number")):
+    # print(int([teacher_.teacher_id for teacher_ in read_teachers(data1_[2])][1]), 'llllllllll')
+    if 1 == len([teacher_.teacher_id for teacher_ in read_teachers(data1_[2])]) or int([teacher_.teacher_id for teacher_ in read_teachers(data1_[2])][1]) == int(data.get("number")):
         await call.message.answer("Siz barcha baxolaringiz muvaffaqiyatli qabul qilindi.\nBaxo berish tugadi!\n/start")
     elif int([teacher_.teacher_id for teacher_ in read_teachers(data1_[2])][1]) != int(data.get("number")):
         await call.message.answer(

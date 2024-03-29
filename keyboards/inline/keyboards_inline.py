@@ -35,8 +35,12 @@ choose_a_teacher = InlineKeyboardMarkup(inline_keyboard=[
         InlineKeyboardButton(text="YUNUSXODJAYEV ZAIR SHAKIROVICH", callback_data="6"),
     ],
     [
-        InlineKeyboardButton(text="	KADIROVA NILUFAR KAZIM QIZI", callback_data="7"),
+        InlineKeyboardButton(text="KADIROVA NILUFAR KAZIM QIZI", callback_data="7"),
     ],
+    [
+        InlineKeyboardButton(text="AXMEDOV ISMAIL RIZAYEVICH", callback_data="8"),
+    ],
+
 ])
 choose_a_teacher_ = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -60,13 +64,16 @@ choose_a_teacher_ = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text="	KADIROVA NILUFAR KAZIM QIZI", callback_data="choose_6"),
     ],
+    [
+        InlineKeyboardButton(text="AXMEDOV ISMAIL RIZAYEVICH", callback_data="choose_7"),
+    ],
 ])
 configuration = InlineKeyboardMarkup(inline_keyboard=[
     [
-        InlineKeyboardButton(text="Guruh yaratish", callback_data="1"),
+        InlineKeyboardButton(text="Guruh yaratish", callback_data="SSS1"),
     ],
     [
-        InlineKeyboardButton(text="Guruhlarni ko'rish", callback_data="2"),
+        InlineKeyboardButton(text="Guruhlarni ko'rish", callback_data="SSS2"),
     ],
 ])
 

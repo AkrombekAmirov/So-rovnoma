@@ -19,7 +19,7 @@ async def func(message: types.Message):
         await message.answer("Siz bu foydalanuvchi emas!")
 
 
-@dp.callback_query_handler(text="1", state="*")
+@dp.callback_query_handler(text="SSS1", state="*")
 async def one(call: CallbackQuery, state: FSMContext):
     await state.update_data({"one": call.data})
     await call.message.answer(text="Guruhni nomini kiriting! Hemis platformasi buyicha kiriting!")
@@ -41,7 +41,7 @@ async def two(message: types.Message, state: FSMContext):
             await message.answer(text="Guruh muvaffaqiyatli yaratildi!", reply_markup=configuration)
 
 
-@dp.callback_query_handler(text="2", state="*")
+@dp.callback_query_handler(text="SSS2", state="*")
 async def three(call: CallbackQuery, state: FSMContext):
     inline_keyboard = InlineKeyboardMarkup(row_width=1)
 
